@@ -38,11 +38,8 @@ public class InchatJava implements MessageReceiver {
         // Listen for incomming messages
         conn.listen(alice, this);
 
-        // Create a new Message
-        EncryptedMessage emsg = CommonLib.encrypt(new Message("My fancy Text:)"));
-
-        // Lookup Bob, send Message to the DHT
-        conn.send(emsg, ProtocolManager.DHT_USER);
+        // Request bobs UUID
+        conn.searchFor("bob");
     }
 
     @Override
@@ -53,10 +50,10 @@ public class InchatJava implements MessageReceiver {
                 bob = new Participant(new UUID(msg.getContent()[0], msg.getContent()[1]));
 
                 // Create a new Message
-                EncryptedMessage emsg = CommonLib.encrypt(new Message("Hi Bob :)"));
+                Message msg = new Message(bob, "Hi Bob :)");
                 
                 // Send the Message to Bob
-                conn.senc(emsg, bob);
+                conn.send(msg);
                 break;
             case MESSAGE:
                 // Bob's Answers
